@@ -41,11 +41,12 @@ public class Main {
 				String title = sc.nextLine();
 				System.out.printf("내용 : ");
 				String body = sc.nextLine();
+				String regDate = util.getNowDateStr();
 
 				System.out.printf("%d번글이 생성되었습니다\n", id); // 바뀐 id를 적용 lastArticleId = 1, 한번 더 반복이 되면 2가 된다
 				System.out.println();
 
-				Article article = new Article(id, title, body); // article wirte를 담기 위한 객체 생성
+				Article article = new Article(id, title, body, regDate); // article wirte를 담기 위한 객체 생성
 				articles.add(article); // 위 article의 내용을 main 맨위에 있는 article객체 articles에 넣는다
 				continue;
 
@@ -107,6 +108,7 @@ public class Main {
 // 				article detail로 시작하면서 뒤에 숫자가 오면 실행을 해준다
 
 				Article foundArticle = null; // Article안에 foundArticle 만들고 null로 초기화
+				String regDate = util.getNowDateStr(); //현재 날짜는 util에서 끌어서 쓴다
 
 				for (int i = 0; i < articles.size(); i++) { // article.size()크기까지 순회하는 함수
 					Article article = articles.get(i);
@@ -125,7 +127,7 @@ public class Main {
 				System.out.println("제목 : " + foundArticle.title);
 				System.out.println("내용 : " + foundArticle.body);
 				System.out.println("작성자 : 익명 ");
-				System.out.println("날짜 : 2020-08-15 ");
+				System.out.println("날짜 :  " + regDate);
 				System.out.println();
 
 			} else {
@@ -147,11 +149,13 @@ class Article { // Article객체를 담을 클래스 생성
 	int id;
 	String title;
 	String body;
+	String regDate;
 
-	public Article(int id, String title, String body) { // Article 객체의 내용물을 담을 생성자 생성
+	public Article(int id, String title, String body, String regDate) { // Article 객체의 내용물을 담을 생성자 생성
 		super();
 		this.id = id;
 		this.title = title;
 		this.body = body;
+		this.regDate = regDate;
 	}
 }
