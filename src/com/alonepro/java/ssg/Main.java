@@ -70,9 +70,32 @@ public class Main {
 //				 startsWith 란? startsWith(commnad)에서 시작하는 
 //				String 문자열부터 입력한 command에 문자열까지 맞으면 true , 틀리면 false return값을 돌려준다
 
-			} else if (command.equals("article delete")) {
+			} else if (command.startsWith("article delete")) {
 
-				System.out.println("삭제");
+				String[] commandBits = command.split(" ");
+				int id = Integer.parseInt(commandBits[2]);
+
+				int foundIndex = -1; //foundIndex를 초기화 , -1이라고 하는 거는 foundIndex안에 내용물이 없다
+
+				for (int i = 0; i < articles.size(); i++) {
+					Article article = articles.get(i);
+
+					if (article.id == id) {
+
+						foundIndex = i; //foundIndex를 i로 인덱스로 초기화, i는 indext다!
+
+					}
+				}
+				if (foundIndex == -1) {
+					
+					System.out.printf("%d번 게시글이 없습니다\n", id);
+					System.out.println();
+				
+				}
+				
+				articles.remove(foundIndex); //articles안에 foundIndex를 하나씩 삭제한다
+				System.out.printf("%d번 게시글이 삭제되었습니다", id);
+				System.out.println();	
 
 			} else if (command.startsWith("article detail")) {
 				String[] commandBits = command.split(" "); // commandBits란 command에서 " " 공백을 기준으로 문자를 나눈 덩어리다, 한무장에서 여러
@@ -83,20 +106,20 @@ public class Main {
 //				commandBits[2] >> "1" 문자이끼때문에 위에서 정수로 치환해준다
 // 				article detail로 시작하면서 뒤에 숫자가 오면 실행을 해준다
 
-				Article foundArticle = null; //Article안에 foundArticle 만들고 null로 초기화
+				Article foundArticle = null; // Article안에 foundArticle 만들고 null로 초기화
 
-				for (int i = 0; i < articles.size(); i++) { //article.size()크기까지 순회하는 함수
+				for (int i = 0; i < articles.size(); i++) { // article.size()크기까지 순회하는 함수
 					Article article = articles.get(i);
 
-					if (article.id == id) { //article.id가 detail에서 선언한 id와 같으면 foundArticle이 null에서 article이랑 같아진다
+					if (article.id == id) { // article.id가 detail에서 선언한 id와 같으면 foundArticle이 null에서 article이랑 같아진다
 						foundArticle = article;
 						break;
-					}//article.id == id 가 실행이 되면 나가서 detail에 내용이 출력이 된다
+					} // article.id == id 가 실행이 되면 나가서 detail에 내용이 출력이 된다
 				}
-				if (foundArticle == null) { //foundArticle이 null이 된다면 실행이 된다
+				if (foundArticle == null) { // foundArticle이 null이 된다면 실행이 된다
 					System.out.printf("%d번 게시글이 없습니다\n", id);
 					System.out.println();
-					continue; //continue는 실행을 멈추고 위에서부터 다시 실행이 된다
+					continue; // continue는 실행을 멈추고 위에서부터 다시 실행이 된다
 				}
 				System.out.println("번호 : " + foundArticle.id);
 				System.out.println("제목 : " + foundArticle.title);
