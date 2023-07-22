@@ -35,7 +35,6 @@ public class Main {
 				int id = lastArticleId + 1; // lastArticleId는 0이니까 1을 더해 반보이 더해질때마다 1이 더해진다.
 				lastArticleId = id; // id를 바뀐 lastArticleId로 선언
 
-				
 				System.out.println("< 게시글 >");
 
 				System.out.printf("제목 : ");
@@ -61,46 +60,72 @@ public class Main {
 
 				System.out.println("번호 | 제목 | 제목");
 
-				for (int i = articles.size() - 1; i >= 0; i--) { //번호를 최신순으로 하는 함수
+				for (int i = articles.size() - 1; i >= 0; i--) { // 번호를 최신순으로 하는 함수
 					Article article = articles.get(i);// Article article를 불러오고 맨위 article객체 articles안에 내용물을 불러온다
 
 					System.out.printf("%d  | %s  |%s\n", article.id, article.title, article.body);
 
-//				for(int i = 0; i < aritcles.size(); i++) { //번호를 1번부터 나타나게 하는 함수
-//					Article article = aritcles.get(i);
-//				}
-
 				}
+
+//				 startsWith 란? startsWith(commnad)에서 시작하는 
+//				String 문자열부터 입력한 command에 문자열까지 맞으면 true , 틀리면 false return값을 돌려준다
 
 			} else if (command.equals("article delete")) {
 
 				System.out.println("삭제");
 
-			} else if (command.equals("article detail")) {
+			} else if (command.startsWith("article detail")) {
+				String[] commandBits = command.split(" "); // commandBits란 command에서 " " 공백을 기준으로 문자를 나눈 덩어리다, 한무장에서 여러
+															// 문장으로 되기 때문에 String앞에 []배열을 써준다
+				int id = Integer.parseInt(commandBits[2]); // commandBits[2]에 오는 문자 '1'을 정수 1로 바꿔준다
+//				commandBits[0] >> article
+//				commandBits[1] >> detail
+//				commandBits[2] >> "1" 문자이끼때문에 위에서 정수로 치환해준다
+// 				article detail로 시작하면서 뒤에 숫자가 오면 실행을 해준다
 
-				System.out.println("삭제");
+				Article foundArticle = null; //Article안에 foundArticle 만들고 null로 초기화
+
+				for (int i = 0; i < articles.size(); i++) { //article.size()크기까지 순회하는 함수
+					Article article = articles.get(i);
+
+					if (article.id == id) { //article.id가 detail에서 선언한 id와 같으면 foundArticle이 null에서 article이랑 같아진다
+						foundArticle = article;
+						break;
+					}//article.id == id 가 실행이 되면 나가서 detail에 내용이 출력이 된다
+				}
+				if (foundArticle == null) { //foundArticle이 null이 된다면 실행이 된다
+					System.out.printf("%d번 게시글이 없습니다\n", id);
+					System.out.println();
+					continue; //continue는 실행을 멈추고 위에서부터 다시 실행이 된다
+				}
+				System.out.println("번호 : " + foundArticle.id);
+				System.out.println("제목 : " + foundArticle.title);
+				System.out.println("내용 : " + foundArticle.body);
+				System.out.println("작성자 : 익명 ");
+				System.out.println("날짜 : 2020-08-15 ");
+				System.out.println();
 
 			} else {
 
-				System.out.println(command +"는 존재하지 않는 명령어입니다");
+				System.out.println(command + "는 존재하지 않는 명령어입니다");
 				System.out.println("다시 입력해주세요");
 				System.out.println();
 
 			}
 
 		}
-		//sc.close(); // 스캐너 선언시 같이 써야됨
+		// sc.close(); // 스캐너 선언시 같이 써야됨
 	}
 
 }
 
-class Article { //Article객체를 담을 클래스 생성
+class Article { // Article객체를 담을 클래스 생성
 
 	int id;
 	String title;
 	String body;
 
-	public Article(int id, String title, String body) { //Article 객체의 내용물을 담을 생성자 생성
+	public Article(int id, String title, String body) { // Article 객체의 내용물을 담을 생성자 생성
 		super();
 		this.id = id;
 		this.title = title;
