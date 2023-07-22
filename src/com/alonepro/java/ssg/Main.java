@@ -76,27 +76,27 @@ public class Main {
 				String[] commandBits = command.split(" ");
 				int id = Integer.parseInt(commandBits[2]);
 
-				int foundIndex = -1; //foundIndex를 초기화 , -1이라고 하는 거는 foundIndex안에 내용물이 없다
+				int foundIndex = -1; // foundIndex를 초기화 , -1이라고 하는 거는 foundIndex안에 내용물이 없다
 
 				for (int i = 0; i < articles.size(); i++) {
 					Article article = articles.get(i);
 
 					if (article.id == id) {
 
-						foundIndex = i; //foundIndex를 i로 인덱스로 초기화, i는 indext다!
+						foundIndex = i; // foundIndex를 i로 인덱스로 초기화, i는 indext다!
 
 					}
 				}
 				if (foundIndex == -1) {
-					
+
 					System.out.printf("%d번 게시글이 없습니다\n", id);
 					System.out.println();
-				
+
 				}
-				
-				articles.remove(foundIndex); //articles안에 foundIndex를 하나씩 삭제한다
+
+				articles.remove(foundIndex); // articles안에 foundIndex를 하나씩 삭제한다
 				System.out.printf("%d번 게시글이 삭제되었습니다", id);
-				System.out.println();	
+				System.out.println();
 
 			} else if (command.startsWith("article detail")) {
 				String[] commandBits = command.split(" "); // commandBits란 command에서 " " 공백을 기준으로 문자를 나눈 덩어리다, 한무장에서 여러
@@ -108,7 +108,7 @@ public class Main {
 // 				article detail로 시작하면서 뒤에 숫자가 오면 실행을 해준다
 
 				Article foundArticle = null; // Article안에 foundArticle 만들고 null로 초기화
-				String regDate = util.getNowDateStr(); //현재 날짜는 util에서 끌어서 쓴다
+				String regDate = util.getNowDateStr(); // 현재 날짜는 util에서 끌어서 쓴다
 
 				for (int i = 0; i < articles.size(); i++) { // article.size()크기까지 순회하는 함수
 					Article article = articles.get(i);
@@ -130,7 +130,41 @@ public class Main {
 				System.out.println("날짜 :  " + regDate);
 				System.out.println();
 
-			} else {
+			} else if (command.startsWith("article modify")) {
+				String[] commandBits = command.split(" ");
+				int id = Integer.parseInt(commandBits[2]);
+
+				Article foundArticle = null;
+
+				for (int i = 0; i < articles.size(); i++) {
+					Article article = articles.get(i);
+
+					if (article.id == id) {
+						foundArticle = article;
+
+					}
+					if (foundArticle == null) {
+
+						System.out.printf("%d번 글이 없습니다\n", id);
+
+					}
+					System.out.println("제목 : "); // detail이랑 달리 수정할 내용을 다시 써야되기 때문에 출력하는 내용을 스캐너로 해주면 된다
+					String title = sc.nextLine();
+					System.out.println("내용 : ");
+					String body = sc.nextLine();
+
+					foundArticle.title = title; // foundArticle이 위에서 article이랑 같다고 했기 때문에 article.title랑
+												// foundArticle.title이랑 같게 된다
+					foundArticle.body = body;
+
+					System.out.printf("%d번 게시글이 수정되었습니다\n", id);
+					// 상세보기랑 비슷하게 해주면 된다
+
+				}
+
+			}
+
+			else {
 
 				System.out.println(command + "는 존재하지 않는 명령어입니다");
 				System.out.println("다시 입력해주세요");
@@ -138,8 +172,8 @@ public class Main {
 
 			}
 
+			sc.close(); // 스캐너 선언시 같이 써야됨
 		}
-		// sc.close(); // 스캐너 선언시 같이 써야됨
 	}
 
 }
