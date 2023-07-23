@@ -88,17 +88,8 @@ public class App {
 				String[] commandBits = command.split(" ");
 				int id = Integer.parseInt(commandBits[2]);
 
-				int foundIndex = -1; // foundIndex를 초기화 , -1이라고 하는 거는 foundIndex안에 내용물이 없다
+				int foundIndex = getArticleInedxById(id); // foundIndex를 초기화 , -1이라고 하는 거는 foundIndex안에 내용물이 없다
 
-				for (int i = 0; i < articles.size(); i++) {
-					Article article = articles.get(i);
-
-					if (article.id == id) {
-
-						foundIndex = i; // foundIndex를 i로 인덱스로 초기화, i는 indext다!
-
-					}
-				}
 				if (foundIndex == -1) {
 
 					System.out.printf("%d번 게시글이 없습니다\n", id);
@@ -118,18 +109,9 @@ public class App {
 //				commandBits[1] >> detail
 //				commandBits[2] >> "1" 문자이끼때문에 위에서 정수로 치환해준다
 // 				article detail로 시작하면서 뒤에 숫자가 오면 실행을 해준다
-
-				Article foundArticle = null; // Article안에 foundArticle 만들고 null로 초기화
 				String regDate = util.getNowDateStr(); // 현재 날짜는 util에서 끌어서 쓴다
+				Article foundArticle = getArticleById(id); // Article안에 foundArticle 만들고 null로 초기화
 
-				for (int i = 0; i < articles.size(); i++) { // article.size()크기까지 순회하는 함수
-					Article article = articles.get(i);
-
-					if (article.id == id) { // article.id가 detail에서 선언한 id와 같으면 foundArticle이 null에서 article이랑 같아진다
-						foundArticle = article;
-						break;
-					} // article.id == id 가 실행이 되면 나가서 detail에 내용이 출력이 된다
-				}
 				if (foundArticle == null) { // foundArticle이 null이 된다면 실행이 된다
 					System.out.printf("%d번 게시글이 없습니다\n", id);
 					System.out.println();
@@ -150,33 +132,24 @@ public class App {
 				String[] commandBits = command.split(" ");
 				int id = Integer.parseInt(commandBits[2]);
 
-				Article foundArticle = null;
+				Article foundArticle = getArticleById(id);
 
-				for (int i = 0; i < articles.size(); i++) {
-					Article article = articles.get(i);
+				if (foundArticle == null) {
 
-					if (article.id == id) {
-						foundArticle = article;
-
-					}
-					if (foundArticle == null) {
-
-						System.out.printf("%d번 글이 없습니다\n", id);
-
-					}
-					System.out.println("제목 : "); // detail이랑 달리 수정할 내용을 다시 써야되기 때문에 출력하는 내용을 스캐너로 해주면 된다
-					String title = sc.nextLine();
-					System.out.println("내용 : ");
-					String body = sc.nextLine();
-
-					foundArticle.title = title; // foundArticle이 위에서 article이랑 같다고 했기 때문에 article.title랑
-												// foundArticle.title이랑 같게 된다
-					foundArticle.body = body;
-
-					System.out.printf("%d번 게시글이 수정되었습니다\n", id);
-					// 상세보기랑 비슷하게 해주면 된다
+					System.out.printf("%d번 글이 없습니다\n", id);
 
 				}
+				System.out.println("제목 : "); // detail이랑 달리 수정할 내용을 다시 써야되기 때문에 출력하는 내용을 스캐너로 해주면 된다
+				String title = sc.nextLine();
+				System.out.println("내용 : ");
+				String body = sc.nextLine();
+
+				foundArticle.title = title; // foundArticle이 위에서 article이랑 같다고 했기 때문에 article.title랑
+											// foundArticle.title이랑 같게 된다
+				foundArticle.body = body;
+
+				System.out.printf("%d번 게시글이 수정되었습니다\n", id);
+				// 상세보기랑 비슷하게 해주면 된다
 
 			}
 
@@ -190,6 +163,65 @@ public class App {
 		}
 
 		// sc.close(); // 스캐너 선언시 같이 써야됨
+	}
+
+	// foundIndexid를 찾는 함수
+	private int getArticleInedxById(int id) {
+
+		int i = 0;
+		for (Article article : articles) {
+
+			if (article.id == id) {
+
+				return i; // foundIndex를 i로 인덱스로 초기화, i는 indext다!
+
+			}
+			i++;
+		}
+		return -1;
+	}
+
+	// articles 내용을 찾는 함수
+	private Article getArticleById(int id) {
+
+//		for (int i = 0; i < articles.size(); i++) { // article.size()크기까지 순회하는 함수
+//			Article article = articles.get(i);
+//
+//			if (article.id == id) { // article.id가 detail에서 선언한 id와 같으면 foundArticle이 null에서 article이랑 같아진다
+//				
+//				return article;
+//			
+//			} // article.id == id 가 실행이 되면 나가서 detail에 내용이 출력이 된다
+//		}
+//		return null;
+//	}
+		for (Article article : articles) { // 향상된 for문이다
+			// 1번 방법
+			// articles에 내용이 article에 들어가 밑에 조건문, 출력문이 실행이 된다
+			// Article article : articles 에는
+			// int i = o; i < articles.size(); i++
+			// Article article = articles.get(i);이 포함이 되어 있다
+			// 말 그래도 article의 1번 게시물, 2번 게시물, 더 많은 게시물을 하나하나씩 찾는 다는 내용이다
+
+			// 2번방법
+			// for문이 반복이 되는게 있기 때문에 getArticleIndexId 함수를 이용한다
+//			if (article.id == id) {
+//				return article;
+//			}
+//		}
+//		return null;
+//	}
+			int index = getArticleInedxById(id);
+
+			if (index != -1) {
+				
+				return articles.get(index);
+				
+			}
+			
+			return null;
+		}
+		
 	}
 
 	private void makeTestData() {
