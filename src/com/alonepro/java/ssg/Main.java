@@ -5,13 +5,24 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-
+	
+	public static List<Article> articles; // Article객체 생성
+	//static은 서로 staticl끼리 공유가 가능하기 때문에 static로 만들고 
+	// static생성자를 만들었다.
+	
+	static {
+		articles = new ArrayList<>();
+	}
+	
 	public static void main(String[] args) {
 		System.out.println("== 프로그램 시작 ==");
+		
+		
+		makeTestData(); //프로그램 시작 시 게시글 내용이 포함이 되어 원활하게 시험하기위해 만든다
 
-		List<Article> articles = new ArrayList<>(); // Article객체 생성
+		
 		Scanner sc = new Scanner(System.in); // 스캐너 선언
-		int lastArticleId = 0; // 게시글 번호 선언 초기화
+		
 
 		while (true) {// true일 때 계속 반복
 
@@ -32,9 +43,9 @@ public class Main {
 
 			} else if (command.equals("article write")) {
 
-				int id = lastArticleId + 1; // lastArticleId는 0이니까 1을 더해 반보이 더해질때마다 1이 더해진다.
-				lastArticleId = id; // id를 바뀐 lastArticleId로 선언
-
+				int id = articles.size() + 1; // maketestdata가 만들어지면서 게시물번호가 test다음 번호 이어야 되는데 1번으로 초기화가 되어
+				// lastArticleId를 지우고 게시믈 크기인 articles.size()로 게시글번호를 측정을 한다
+			
 				System.out.println("< 게시글 >");
 
 				System.out.printf("제목 : ");
@@ -180,6 +191,13 @@ public class Main {
 
 		//sc.close(); // 스캐너 선언시 같이 써야됨
 	}
+
+	private static void makeTestData() {
+		System.out.println("프로그램 시작시 실행됩니다.");
+		articles.add(new Article(1, "제목 1" , "내용 1", util.getNowDateStr(), 11));
+		articles.add(new Article(2, "제목 2" , "내용 2", util.getNowDateStr(), 22));
+		articles.add(new Article(3, "제목 3" , "내용 3", util.getNowDateStr(), 33));
+	}
 }
 
 class Article { // Article객체를 담을 클래스 생성
@@ -191,13 +209,20 @@ class Article { // Article객체를 담을 클래스 생성
 	int hit;
 
 	public Article(int id, String title, String body, String regDate) { // Article 객체의 내용물을 담을 생성자 생성
+		
+		this(id, title, body, regDate, 0); //article 생서자에서 hit가 안들어간 버전이다. 0이 생략되었는데 조회수가 있을시 0이 저절로 들어간다
+		
+	}
+
+	public Article(int id, String title, String body, String regDate, int hit){ // Article 객체의 내용물을 담을 생성자 생성
 		super();
 		this.id = id;
 		this.title = title;
 		this.body = body;
 		this.regDate = regDate;
-		this.hit = 0;
-	}
+		this.hit = hit;
+
+	}	
 
 	public void increasehit() {
 		hit++; 
