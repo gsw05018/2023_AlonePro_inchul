@@ -69,11 +69,40 @@ public class App {
 					System.out.println("");
 					continue;
 				}
+				//article list를 제외하고 그 뒤에 내용이 있다면 잘나내서 searchKeyword에 넣는다
+				//searchKeyword에는 article list 뒤에 검색내용만 들어가게 된다
+				String searchKeyword = command.substring("article list".length()).trim();
+				
+				
+				//forListArticles는 출력문에 있는 forListArticles가 사용한다
+				List<Article> forListArticles = articles;
+				
+				//게시물 찾기
+				//만약에 searchKeyword가 있다면
+				if(searchKeyword.length() > 0) {
+					//forListArticles의 새 창고를 짓는다
+					forListArticles = new ArrayList<>();
+					for(Article article : articles) {
+						
+						//입력된 키워드에 일치하는 것은 담아서 저장을 한다 
+						if(article.title.contains(searchKeyword)) {
+							forListArticles.add(article);
+						}
+						
+					}
+					if(articles.size() == 0) {
+						
+						System.out.println("검색된 게시글이 존재하지 않습니다");
+						continue;
+						
+					}
+				}
+				
 
 				System.out.println("번호   | 제목  | 내용  | 조회수 ");
 
-				for (int i = articles.size() - 1; i >= 0; i--) { // 번호를 최신순으로 하는 함수
-					Article article = articles.get(i);// Article article를 불러오고 맨위 article객체 articles안에 내용물을 불러온다
+				for (int i = forListArticles.size() - 1; i >= 0; i--) { // 번호를 최신순으로 하는 함수
+					Article article = forListArticles.get(i);// Article article를 불러오고 맨위 article객체 articles안에 내용물을 불러온다
 
 					System.out.printf("%4d  | %4s  |%4s  | %4d\n", article.id, article.title, article.body,
 							article.hit);
@@ -187,7 +216,7 @@ public class App {
 //		for (int i = 0; i < articles.size(); i++) { // article.size()크기까지 순회하는 함수
 //			Article article = articles.get(i);
 //
-//			if (article.id == id) { // article.id가 detail에서 선언한 id와 같으면 foundArticle이 null에서 article이랑 같아진다
+//			if (article.id == id) { // ar	ticle.id가 detail에서 선언한 id와 같으면 foundArticle이 null에서 article이랑 같아진다
 //				
 //				return article;
 //			
@@ -195,7 +224,7 @@ public class App {
 //		}
 //		return null;
 //	}
-		for (Article article : articles) { // 향상된 for문이다
+		
 			// 1번 방법
 			// articles에 내용이 article에 들어가 밑에 조건문, 출력문이 실행이 된다
 			// Article article : articles 에는
@@ -211,18 +240,15 @@ public class App {
 //		}
 //		return null;
 //	}
+		
 			int index = getArticleInedxById(id);
-
+		
 			if (index != -1) {
-				
 				return articles.get(index);
-				
 			}
-			
+
 			return null;
 		}
-		
-	}
 
 	private void makeTestData() {
 		System.out.println("프로그램 시작시 실행됩니다.");
