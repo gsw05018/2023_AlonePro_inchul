@@ -59,13 +59,13 @@ public class Main {
 					continue;
 				}
 
-				System.out.println("번호 | 제목 | 제목");
+				System.out.println("번호   | 제목  | 내용  | 조회수 ");
 
 				for (int i = articles.size() - 1; i >= 0; i--) { // 번호를 최신순으로 하는 함수
 					Article article = articles.get(i);// Article article를 불러오고 맨위 article객체 articles안에 내용물을 불러온다
 
-					System.out.printf("%d  | %s  |%s\n", article.id, article.title, article.body);
-
+					System.out.printf("%4d  | %4s  |%4s  | %4d\n", article.id, article.title, article.body, article.hit);
+					//포멧앞에 숫자를 붙이면 그 만큼 공간을 만든다는 의미이다!
 				}
 
 //				 startsWith 란? startsWith(commnad)에서 시작하는 
@@ -110,6 +110,7 @@ public class Main {
 				Article foundArticle = null; // Article안에 foundArticle 만들고 null로 초기화
 				String regDate = util.getNowDateStr(); // 현재 날짜는 util에서 끌어서 쓴다
 
+				
 				for (int i = 0; i < articles.size(); i++) { // article.size()크기까지 순회하는 함수
 					Article article = articles.get(i);
 
@@ -123,11 +124,15 @@ public class Main {
 					System.out.println();
 					continue; // continue는 실행을 멈추고 위에서부터 다시 실행이 된다
 				}
+				
+				foundArticle.increasehit(); //조건문이 다 끝나고 출력이 될때 조회수 출력, hit++함수가 포함이 되어있기 때문에 조회할때마다 1씩 증가
+
 				System.out.println("번호 : " + foundArticle.id);
 				System.out.println("제목 : " + foundArticle.title);
 				System.out.println("내용 : " + foundArticle.body);
 				System.out.println("작성자 : 익명 ");
 				System.out.println("날짜 :  " + regDate);
+				System.out.println("조회수 : " + foundArticle.hit);
 				System.out.println();
 
 			} else if (command.startsWith("article modify")) {
@@ -171,11 +176,10 @@ public class Main {
 				System.out.println();
 
 			}
-
-			sc.close(); // 스캐너 선언시 같이 써야됨
 		}
-	}
 
+		//sc.close(); // 스캐너 선언시 같이 써야됨
+	}
 }
 
 class Article { // Article객체를 담을 클래스 생성
@@ -184,6 +188,7 @@ class Article { // Article객체를 담을 클래스 생성
 	String title;
 	String body;
 	String regDate;
+	int hit;
 
 	public Article(int id, String title, String body, String regDate) { // Article 객체의 내용물을 담을 생성자 생성
 		super();
@@ -191,5 +196,12 @@ class Article { // Article객체를 담을 클래스 생성
 		this.title = title;
 		this.body = body;
 		this.regDate = regDate;
+		this.hit = 0;
+	}
+
+	public void increasehit() {
+		hit++; 
+		//1씩 증가를 한다!
+
 	}
 }
