@@ -1,4 +1,4 @@
-package com.alonepro.java.ssg;
+package com.alonepro.java.ssg.util;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
