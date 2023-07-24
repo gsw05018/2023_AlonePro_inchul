@@ -152,10 +152,10 @@ public class ArticleController extends Controller {
 		String[] commandBits = command.split(" "); // commandBits란 command에서 " " 공백을 기준으로 문자를 나눈 덩어리다, 한무장에서 여러
 		// 문장으로 되기 때문에 String앞에 []배열을 써준다
 		int id = Integer.parseInt(commandBits[2]); // commandBits[2]에 오는 문자 '1'을 정수 1로 바꿔준다
-//commandBits[0] >> article
-//commandBits[1] >> detail
-//commandBits[2] >> "1" 문자이끼때문에 위에서 정수로 치환해준다
-//article detail로 시작하면서 뒤에 숫자가 오면 실행을 해준다
+		//commandBits[0] >> article
+		//commandBits[1] >> detail
+		//commandBits[2] >> "1" 문자이끼때문에 위에서 정수로 치환해준다
+		//article detail로 시작하면서 뒤에 숫자가 오면 실행을 해준다
 		String regDate = util.getNowDateStr(); // 현재 날짜는 util에서 끌어서 쓴다
 		Article foundArticle = getArticleById(id); // Article안에 foundArticle 만들고 null로 초기화
 

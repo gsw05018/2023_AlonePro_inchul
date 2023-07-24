@@ -19,7 +19,7 @@ public class App {
 		ArticleController articleController = new ArticleController(sc);
 		
 		articleController.makeTestData(); //articleController안에 넣는다
-		
+		memberController.makeTestData();
 
 		while (true) {// true일 때 계속 반복
 

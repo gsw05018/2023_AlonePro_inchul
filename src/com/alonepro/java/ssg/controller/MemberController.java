@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.alonepro.java.ssg.dto.Article;
 import com.alonepro.java.ssg.dto.Member;
 import com.alonepro.java.ssg.util.util;
 
@@ -11,7 +12,7 @@ import com.alonepro.java.ssg.util.util;
 
 public class MemberController extends Controller {
 
-	//class가 끝나도 실행이 되기 위해서 맨 위에 작성하는 거임
+	// class가 끝나도 실행이 되기 위해서 맨 위에 작성하는 거임
 	private List<Member> members;
 	private Scanner sc;
 	private String command;
@@ -37,6 +38,9 @@ public class MemberController extends Controller {
 		case "login":
 			dologin();
 			break;
+		case "logout":
+			dologout();
+			break;
 		default:
 			System.out.println("존재하지 않는 명령어입니다");
 			break;
@@ -45,43 +49,14 @@ public class MemberController extends Controller {
 
 	}
 
-	private void dologin() {
-
-		String regDate = util.getNowDateStr();
-
-		System.out.println("< 로그인 >");
-		System.out.println();
-
-		System.out.printf("아이디 : ");
-		String loginId = sc.nextLine();
-		System.out.println();
-		System.out.printf("비밀번호 : ");
-		String loginPw = sc.nextLine();
-
-		//logind찾는 함수 
-		Member member = getMemberByLoginId(loginId);
-
-		if (member == null) {
-
-			System.out.println("해당되는 회원이 없습니다");
-			return;
-
-		}
-		if (member.loginPw.equals(loginPw) == false) {
-
-			System.out.println("비밀번호가 틀렸습니다");
-			return;
-
-		}
-
-		//여기에 Member loginedMember를 만들면 안됨 그럼 기억하는게 함수끝나면 사라짐
-		loginedMember = member;
-		
-		System.out.printf("로그인 성공! %s님 환영합니다\n", loginedMember.name);
-
-	}
-
 	private void dojoin() {
+	if(islogined()) { //login이 되어있다
+			
+			System.out.println("로그인이 되어있습니다");
+			return;
+			
+		}
+		
 
 		int id = members.size() + 1;
 
@@ -135,6 +110,63 @@ public class MemberController extends Controller {
 
 	}
 
+	private void dologin() {
+
+		String regDate = util.getNowDateStr();
+
+		System.out.println("< 로그인 >");
+		System.out.println();
+
+		System.out.printf("아이디 : ");
+		String loginId = sc.nextLine();
+		System.out.println();
+		System.out.printf("비밀번호 : ");
+		String loginPw = sc.nextLine();
+
+		// logind찾는 함수
+		Member member = getMemberByLoginId(loginId);
+
+		if (member == null) {
+
+			System.out.println("해당되는 회원이 없습니다");
+			return;
+
+		}
+		if (member.loginPw.equals(loginPw) == false) {
+
+			System.out.println("비밀번호가 틀렸습니다");
+			return;
+
+		}
+
+		// 여기에 Member loginedMember를 만들면 안됨 그럼 기억하는게 함수끝나면 사라짐
+		loginedMember = member;
+
+		System.out.printf("로그인 성공! %s님 환영합니다\n", loginedMember.name);
+
+	}
+
+	private boolean islogined() {
+		
+		return loginedMember != null; //!= >> null에 반대는 내용물이 있다. 즉 로그인이 되어있다
+		
+	}
+	
+	private void dologout() {
+		
+		if(islogined() == false) { //내용물이 없다. 
+			
+			System.out.println("로그인을 해주세요");
+			return;
+			
+		}
+		
+		loginedMember = null;
+		System.out.println("로그아웃 되었습니다");
+		
+
+	}
+
 	// loginId index찾는 함수
 	private boolean isjoincheckLoginId(String loginId) {
 
@@ -179,9 +211,15 @@ public class MemberController extends Controller {
 		}
 
 		return members.get(index);
-		//member로 return이 끝나기때문에 void를 뺴고 member로 해야함
-		
+		// member로 return이 끝나기때문에 void를 뺴고 member로 해야함
 
+	}
+
+	public void makeTestData() { // article 테스트 회원 생성
+		System.out.println("프로그램 시작시 실행됩니다.");
+		members.add(new Member(1, "gsw05018", "gsw05018", "한인철", util.getNowDateStr()));
+		members.add(new Member(2, "user1", "user1", "유저1", util.getNowDateStr()));
+		members.add(new Member(3, "user2", "user2", "유저2", util.getNowDateStr()));
 	}
 
 }
