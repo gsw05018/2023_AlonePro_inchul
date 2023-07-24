@@ -31,11 +31,9 @@ public class ArticleController extends Controller {
 		switch (actionMethodName) { // commandBits[1]글자가 맞으면 실행이 된다
 
 		case "write":
-			if(islogined() == false) { //로그인 하기전 사용 불가
-				
+			if (islogined() == false) { // 로그인 하기전 사용 불가
 				System.out.println("로그인후 이용해주세요");
 				return;
-				
 			}
 			doWrite();
 			break;
@@ -120,7 +118,8 @@ public class ArticleController extends Controller {
 		for (int i = forListArticles.size() - 1; i >= 0; i--) { // 번호를 최신순으로 하는 함수
 			Article article = forListArticles.get(i);// Article article를 불러오고 맨위 article객체 articles안에 내용물을 불러온다
 
-			System.out.printf("%4d  | %6d | %4s  |%4s  | %4d\n", article.id, article.memberId ,article.title, article.body, article.hit);
+			System.out.printf("%4d  | %6d | %4s  |%4s  | %4d\n", article.id, article.memberId, article.title,
+					article.body, article.hit);
 			// 포멧앞에 숫자를 붙이면 그 만큼 공간을 만든다는 의미이다!
 		}
 
@@ -135,16 +134,26 @@ public class ArticleController extends Controller {
 		String[] commandBits = command.split(" ");
 		int id = Integer.parseInt(commandBits[2]);
 
-		int foundIndex = getArticleInedxById(id); // foundIndex를 초기화 , -1이라고 하는 거는 foundIndex안에 내용물이 없다
+		Article foundArticle = getArticleById(id); // foundArticle로 대체해서 사용, articleid를 찾는다
 
-		if (foundIndex == -1) {
+		if (foundArticle == null) {
 
 			System.out.printf("%d번 게시글이 없습니다\n", id);
 			System.out.println();
+			return;
+			
+
+		}
+		
+		//작성자랑 로그인한 회원이랑 같으면 삭제, 아니면 불가능
+		if (foundArticle.memberId != loginedMember.id) { //foundArticle 에서 memberId를 찾아서 loginedMember.id랑 맞는지 확인을 한다
+
+			System.out.printf("권한이 없습니다\n");
+			return;
 
 		}
 
-		articles.remove(foundIndex); // articles안에 foundIndex를 하나씩 삭제한다
+		articles.remove(foundArticle); // articles안에 foundIndex를 하나씩 삭제한다
 		System.out.printf("%d번 게시글이 삭제되었습니다", id);
 		System.out.println();
 
@@ -192,8 +201,17 @@ public class ArticleController extends Controller {
 		if (foundArticle == null) {
 
 			System.out.printf("%d번 글이 없습니다\n", id);
+			return;
 
 		}
+		
+		if (foundArticle.memberId != loginedMember.id) {
+
+			System.out.printf("권한이 없습니다\n");
+			return;
+
+		}
+		
 		System.out.println("제목 : "); // detail이랑 달리 수정할 내용을 다시 써야되기 때문에 출력하는 내용을 스캐너로 해주면 된다
 		String title = sc.nextLine();
 		System.out.println("내용 : ");
@@ -266,9 +284,9 @@ public class ArticleController extends Controller {
 
 	public void makeTestData() {
 		System.out.println("프로그램 시작시 실행됩니다.");
-		articles.add(new Article(1, 1,"제목 1", "내용 1", util.getNowDateStr(), 11));
-		articles.add(new Article(2, 2,"제목 2", "내용 2", util.getNowDateStr(), 22));
-		articles.add(new Article(3, 3,"제목 3", "내용 3", util.getNowDateStr(), 33));
+		articles.add(new Article(1, 1, "제목 1", "내용 1", util.getNowDateStr(), 11));
+		articles.add(new Article(2, 2, "제목 2", "내용 2", util.getNowDateStr(), 22));
+		articles.add(new Article(3, 3, "제목 3", "내용 3", util.getNowDateStr(), 33));
 	}
 
 }
