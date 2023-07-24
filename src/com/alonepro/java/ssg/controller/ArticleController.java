@@ -31,10 +31,6 @@ public class ArticleController extends Controller {
 		switch (actionMethodName) { // commandBits[1]글자가 맞으면 실행이 된다
 
 		case "write":
-			if (islogined() == false) { // 로그인 하기전 사용 불가
-				System.out.println("로그인후 이용해주세요");
-				return;
-			}
 			doWrite();
 			break;
 		case "delete":
@@ -141,12 +137,11 @@ public class ArticleController extends Controller {
 			System.out.printf("%d번 게시글이 없습니다\n", id);
 			System.out.println();
 			return;
-			
 
 		}
-		
-		//작성자랑 로그인한 회원이랑 같으면 삭제, 아니면 불가능
-		if (foundArticle.memberId != loginedMember.id) { //foundArticle 에서 memberId를 찾아서 loginedMember.id랑 맞는지 확인을 한다
+
+		// 작성자랑 로그인한 회원이랑 같으면 삭제, 아니면 불가능
+		if (foundArticle.memberId != loginedMember.id) { // foundArticle 에서 memberId를 찾아서 loginedMember.id랑 맞는지 확인을 한다
 
 			System.out.printf("권한이 없습니다\n");
 			return;
@@ -204,14 +199,14 @@ public class ArticleController extends Controller {
 			return;
 
 		}
-		
+
 		if (foundArticle.memberId != loginedMember.id) {
 
 			System.out.printf("권한이 없습니다\n");
 			return;
 
 		}
-		
+
 		System.out.println("제목 : "); // detail이랑 달리 수정할 내용을 다시 써야되기 때문에 출력하는 내용을 스캐너로 해주면 된다
 		String title = sc.nextLine();
 		System.out.println("내용 : ");

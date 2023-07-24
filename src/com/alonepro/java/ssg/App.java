@@ -11,14 +11,12 @@ public class App {
 	public void start() {
 		System.out.println("== 프로그램 시작 ==");
 
-	
-
 		Scanner sc = new Scanner(System.in); // 스캐너 선언
 
 		MemberController memberController = new MemberController(sc); // 생성자를 받아준다
 		ArticleController articleController = new ArticleController(sc);
-		
-		articleController.makeTestData(); //articleController안에 넣는다
+
+		articleController.makeTestData(); // articleController안에 넣는다
 		memberController.makeTestData();
 
 		while (true) {// true일 때 계속 반복
@@ -42,9 +40,9 @@ public class App {
 
 			}
 
-			String[] commandBits = command.split(" "); //command를 공백을 기준으로 쪼갠다
+			String[] commandBits = command.split(" "); // command를 공백을 기준으로 쪼갠다
 
-			if (commandBits.length == 1) { //commandBits가 1이다 
+			if (commandBits.length == 1) { // commandBits가 1이다
 				System.out.println("존재하지 않는 명령어 입니다.");
 				continue;
 			}
@@ -54,7 +52,7 @@ public class App {
 
 			Controller controller = null;
 
-			if (controllerName.equals("article")) { 
+			if (controllerName.equals("article")) {
 				controller = articleController;
 			} else if (controllerName.equals("member")) {
 				controller = memberController;
@@ -63,10 +61,41 @@ public class App {
 				continue;
 			}
 
+			
+			//하나의 actionName을 만들어서 switch문을 이용해 로그인 후 , 로그아웃 후 이용해주세요 문구를 한번에 해결했다
+			String actionName = controllerName + "/" + actionMethodName;
+			//ex) controllername = article
+			//ex) actionMethodName = list
+
+			switch (actionName) {
+
+			case "article/write":
+			case "article/delete":
+			case "article/modify":
+			case "member/logout":
+
+				if (controller.islogined() == false) {
+					System.out.println("로그인 후 이용해주세요");
+					continue;
+				}
+				break;
+			}
+
+			switch (actionName) {
+
+			case "member/join":
+			case "member/login":
+
+				if (controller.islogined()) {
+					System.out.println("로그아웃 후 이용해주세요");
+					continue;
+				}
+				break;
+			}
+
 			controller.doAction(command, actionMethodName); // 제대로 된 행동은 각자 controlelr에서 실행이 된다
 		}
 		sc.close(); // 스캐너 선언시 같이 써야됨
 	}
-
 
 }

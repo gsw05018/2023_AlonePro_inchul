@@ -50,12 +50,7 @@ public class MemberController extends Controller {
 	}
 
 	private void dojoin() {
-	if(islogined()) { //login이 되어있다
-			
-			System.out.println("로그인이 되어있습니다");
-			return;
-			
-		}
+
 		
 
 		int id = members.size() + 1;
@@ -150,12 +145,6 @@ public class MemberController extends Controller {
 	
 	private void dologout() {
 		
-		if(islogined() == false) { //내용물이 없다. 
-			
-			System.out.println("로그인을 해주세요");
-			return;
-			
-		}
 		
 		loginedMember = null;
 		System.out.println("로그아웃 되었습니다");
