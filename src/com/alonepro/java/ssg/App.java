@@ -5,16 +5,19 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.alonepro.java.ssg.dto.Article;
+import com.alonepro.java.ssg.dto.Member;
 import com.alonepro.java.ssg.util.util;
 
 public class App {
 
-	public List<Article> articles; // Article객체 생성
+	public List<Article> articles; // Articl List 생성
 	// static은 서로 staticl끼리 공유가 가능하기 때문에 static로 만들고
 	// static생성자를 만들었다.
+	public List<Member> members; // member에 List생성
 
 	public App() {
-		articles = new ArrayList<>();
+		articles = new ArrayList<>(); // articles에 객체연결
+		members = new ArrayList<>(); // memvers에 객체연결
 	}
 
 	public void start() {
@@ -69,35 +72,33 @@ public class App {
 					System.out.println("");
 					continue;
 				}
-				//article list를 제외하고 그 뒤에 내용이 있다면 잘나내서 searchKeyword에 넣는다
-				//searchKeyword에는 article list 뒤에 검색내용만 들어가게 된다
+				// article list를 제외하고 그 뒤에 내용이 있다면 잘나내서 searchKeyword에 넣는다
+				// searchKeyword에는 article list 뒤에 검색내용만 들어가게 된다
 				String searchKeyword = command.substring("article list".length()).trim();
-				
-				
-				//forListArticles는 출력문에 있는 forListArticles가 사용한다
+
+				// forListArticles는 출력문에 있는 forListArticles가 사용한다
 				List<Article> forListArticles = articles;
-				
-				//게시물 찾기
-				//만약에 searchKeyword가 있다면
-				if(searchKeyword.length() > 0) {
-					//forListArticles의 새 창고를 짓는다
+
+				// 게시물 찾기
+				// 만약에 searchKeyword가 있다면
+				if (searchKeyword.length() > 0) {
+					// forListArticles의 새 창고를 짓는다
 					forListArticles = new ArrayList<>();
-					for(Article article : articles) {
-						
-						//입력된 키워드에 일치하는 것은 담아서 저장을 한다 
-						if(article.title.contains(searchKeyword)) {
+					for (Article article : articles) {
+
+						// 입력된 키워드에 일치하는 것은 담아서 저장을 한다
+						if (article.title.contains(searchKeyword)) {
 							forListArticles.add(article);
 						}
-						
+
 					}
-					if(articles.size() == 0) {
-						
+					if (articles.size() == 0) {
+
 						System.out.println("검색된 게시글이 존재하지 않습니다");
 						continue;
-						
+
 					}
 				}
-				
 
 				System.out.println("번호   | 제목  | 내용  | 조회수 ");
 
@@ -180,9 +181,59 @@ public class App {
 				System.out.printf("%d번 게시글이 수정되었습니다\n", id);
 				// 상세보기랑 비슷하게 해주면 된다
 
-			}
+			} else if (command.equals("member join")) { // article write랑 같은 맥락이다
 
-			else {
+				int id = members.size() + 1;
+
+				System.out.println("< 회원가입 >");
+
+				String loginId = null; // while안에 있으면 while밖에 있는 loginId는
+
+				String regDate = util.getNowDateStr();
+
+				while (true) { // login가 틀리면 계속 반복이다
+
+					System.out.printf("아이디  : ");
+					loginId = sc.nextLine();
+
+					if (isjoincheckLoginId(loginId) == false) {
+						System.out.printf("%s은(는) 이미 사용중인 아이디입니다\n", loginId);
+						continue;
+					}
+					break;
+				}
+
+				String loginPw = null;
+				String loginPwCheck = null;
+
+				while (true) {
+
+					System.out.printf("비밀번호 : ");
+					loginPw = sc.nextLine();
+					System.out.printf("비밀번호 확인 : ");
+					loginPwCheck = sc.nextLine();
+
+					if (loginPw.equals(loginPwCheck) == false) {
+
+						System.out.println("비밀번호를 다시 입력해주세요");
+						continue;
+
+					}
+
+					break;
+
+				}
+
+				System.out.println("이름 : ");
+				String name = sc.nextLine();
+
+				System.out.printf("%d번 회원이 생성되었습니다\n", id); // 바뀐 id를 적용 lastArticleId = 1, 한번 더 반복이 되면 2가 된다
+				System.out.println();
+
+				Member member = new Member(id, loginId, loginPw, name, regDate); // member join를 담기 위한 객체 생성
+				members.add(member); // 위 member의 내용을 main 맨위에 있는 memeber객체 members에 넣는다
+
+			} else {
 
 				System.out.println(command + "는 존재하지 않는 명령어입니다");
 				System.out.println("다시 입력해주세요");
@@ -192,6 +243,39 @@ public class App {
 		}
 
 		// sc.close(); // 스캐너 선언시 같이 써야됨
+	}
+
+	// loginId index찾는 함수
+	private boolean isjoincheckLoginId(String loginId) {
+
+		int index = getMemberIndexByLoginId(loginId); // loginId를 주는 index 생성
+
+		if (index == -1) { // -1은 없다는 뜻
+
+			return true;
+
+		}
+
+		return false;
+
+	}
+
+//  loginId index찾는 함수
+	private int getMemberIndexByLoginId(String loginId) {
+		int i = 0;
+
+		for (Member member : members) { // get(i)를 찾는 함수 생성
+
+			if (member.loginId.equals(loginId)) {
+
+				return i;
+
+			}
+			i++;
+
+		}
+		return -1;
+
 	}
 
 	// foundIndexid를 찾는 함수
@@ -224,31 +308,31 @@ public class App {
 //		}
 //		return null;
 //	}
-		
-			// 1번 방법
-			// articles에 내용이 article에 들어가 밑에 조건문, 출력문이 실행이 된다
-			// Article article : articles 에는
-			// int i = o; i < articles.size(); i++
-			// Article article = articles.get(i);이 포함이 되어 있다
-			// 말 그래도 article의 1번 게시물, 2번 게시물, 더 많은 게시물을 하나하나씩 찾는 다는 내용이다
 
-			// 2번방법
-			// for문이 반복이 되는게 있기 때문에 getArticleIndexId 함수를 이용한다
+		// 1번 방법
+		// articles에 내용이 article에 들어가 밑에 조건문, 출력문이 실행이 된다
+		// Article article : articles 에는
+		// int i = o; i < articles.size(); i++
+		// Article article = articles.get(i);이 포함이 되어 있다
+		// 말 그래도 article의 1번 게시물, 2번 게시물, 더 많은 게시물을 하나하나씩 찾는 다는 내용이다
+
+		// 2번방법
+		// for문이 반복이 되는게 있기 때문에 getArticleIndexId 함수를 이용한다
 //			if (article.id == id) {
 //				return article;
 //			}
 //		}
 //		return null;
 //	}
-		
-			int index = getArticleInedxById(id);
-		
-			if (index != -1) {
-				return articles.get(index);
-			}
 
-			return null;
+		int index = getArticleInedxById(id);
+
+		if (index != -1) {
+			return articles.get(index);
 		}
+
+		return null;
+	}
 
 	private void makeTestData() {
 		System.out.println("프로그램 시작시 실행됩니다.");
