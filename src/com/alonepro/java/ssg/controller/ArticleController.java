@@ -9,22 +9,49 @@ import com.alonepro.java.ssg.util.util;
 
 //article의 역활을 하는 기능들을 articleController에 모음
 
+public class ArticleController extends Controller {
 
-public class ArticleController {
+	private List<Article> articles; // 전체적으로 aritcles를 쓰기 때문에 하나 만들어준다
+	private Scanner sc; // 전체적으로 Scanner 쓰기 때문에 만들어준다
+	private String command; 
+	private String actionMethodName;
 
-	private List<Article> articles; //전체적으로 aritcles를 쓰기 때문에 하나 만들어준다
-	private Scanner sc; //전체적으로 Scanner 쓰기 때문에 만들어준다
+	public ArticleController(Scanner sc) { // articleController 생성자 생성
 
-	public ArticleController(Scanner sc, List<Article> articles) { //articleController 생성자 생성
-
-		this.articles = articles;
 		this.sc = sc;
+		articles = new ArrayList<>(); //app에 있던 articles를 지우고 controller에서 쓸 수있게 리모콘을 새로 만든다.
 
 	}
 
-	
-	//aritcle write 기능
-	public void doWrite() {
+	public void doAction(String command, String actionMethodName) {
+
+		this.command = command;
+		this.actionMethodName = actionMethodName;
+
+		switch (actionMethodName) { //commandBits[1]글자가 맞으면 실행이 된다
+
+		case "wrtie":
+			doWrite();
+			break;
+		case "delete":
+			doDelete();
+			break;
+		case "modify":
+			doModify();
+			break;
+		case "list":
+			showList();
+			break;
+		case "detail":
+			showDetail();
+			break;
+
+		}
+
+	}
+
+	// aritcle write 기능
+	private void doWrite() {
 
 		int id = articles.size() + 1; // maketestdata가 만들어지면서 게시물번호가 test다음 번호 이어야 되는데 1번으로 초기화가 되어
 		// lastArticleId를 지우고 게시믈 크기인 articles.size()로 게시글번호를 측정을 한다
@@ -46,15 +73,15 @@ public class ArticleController {
 
 	}
 
-	//article list 기능
-	public void showList(String command) { //command를 넘겨준다
+	// article list 기능
+	private void showList() { // command를 넘겨준다
 
 		if (articles.size() == 0) {// articles의 내용물이 없을 때
 
 			System.out.println("게시글이 없습니다");
 			System.out.println("");
-			return; //반복문이 아니기 때문에 break,continue는 못 쓰기 때문에 return을 해준다. if문에서 빠져나온다는 내용이다
-			
+			return; // 반복문이 아니기 때문에 break,continue는 못 쓰기 때문에 return을 해준다. if문에서 빠져나온다는 내용이다
+
 		}
 		// article list를 제외하고 그 뒤에 내용이 있다면 잘나내서 searchKeyword에 넣는다
 		// searchKeyword에는 article list 뒤에 검색내용만 들어가게 된다
@@ -98,9 +125,8 @@ public class ArticleController {
 
 	}
 
-	
-	//article delete 기능
-	public void doDelete(String command) { //command를 넘겨준다
+	// article delete 기능
+	private void doDelete() { // command를 넘겨준다
 
 		String[] commandBits = command.split(" ");
 		int id = Integer.parseInt(commandBits[2]);
@@ -120,9 +146,8 @@ public class ArticleController {
 
 	}
 
-	
-	//article detail 기능
-	public void showDetail(String command) {
+	// article detail 기능
+	private void showDetail() {
 
 		String[] commandBits = command.split(" "); // commandBits란 command에서 " " 공백을 기준으로 문자를 나눈 덩어리다, 한무장에서 여러
 		// 문장으로 되기 때문에 String앞에 []배열을 써준다
@@ -152,9 +177,8 @@ public class ArticleController {
 
 	}
 
-	
-	//article modify기능
-	public void doModify(String command) {
+	// article modify기능
+	private void doModify() {
 
 		String[] commandBits = command.split(" ");
 		int id = Integer.parseInt(commandBits[2]);
@@ -234,6 +258,13 @@ public class ArticleController {
 		}
 
 		return null;
+	}
+	
+	public void makeTestData() {
+		System.out.println("프로그램 시작시 실행됩니다.");
+		articles.add(new Article(1, "제목 1", "내용 1", util.getNowDateStr(), 11));
+		articles.add(new Article(2, "제목 2", "내용 2", util.getNowDateStr(), 22));
+		articles.add(new Article(3, "제목 3", "내용 3", util.getNowDateStr(), 33));
 	}
 
 }

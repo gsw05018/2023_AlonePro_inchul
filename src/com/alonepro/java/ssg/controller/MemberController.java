@@ -1,26 +1,43 @@
 package com.alonepro.java.ssg.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import com.alonepro.java.ssg.dto.Member;
 import com.alonepro.java.ssg.util.util;
 
-
 //articleController이랑 똑같다
 
-public class MemberController {
-	
+public class MemberController extends Controller {
+
 	private List<Member> members;
 	private Scanner sc;
-	
-	public MemberController(Scanner sc, List<Member> members){
-		
-		this.members = members;
+	private String command;
+	private String actionMethodName;
+
+	public MemberController(Scanner sc) {
+
+		members = new ArrayList<>();
 		this.sc = sc;
 	}
 
-	public void dojoin() {
+	public void doAction(String command, String actionMethodName) {
+
+		this.actionMethodName = actionMethodName;
+		this.command = command;
+
+		switch (actionMethodName) {
+
+		case "join":
+			dojoin();
+			break;
+
+		}
+
+	}
+
+	private void dojoin() {
 
 		int id = members.size() + 1;
 
