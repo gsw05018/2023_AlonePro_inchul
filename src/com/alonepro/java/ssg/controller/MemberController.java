@@ -11,10 +11,12 @@ import com.alonepro.java.ssg.util.util;
 
 public class MemberController extends Controller {
 
+	//class가 끝나도 실행이 되기 위해서 맨 위에 작성하는 거임
 	private List<Member> members;
 	private Scanner sc;
 	private String command;
 	private String actionMethodName;
+	private Member loginedMember;
 
 	public MemberController(Scanner sc) {
 
@@ -32,8 +34,50 @@ public class MemberController extends Controller {
 		case "join":
 			dojoin();
 			break;
+		case "login":
+			dologin();
+			break;
+		default:
+			System.out.println("존재하지 않는 명령어입니다");
+			break;
 
 		}
+
+	}
+
+	private void dologin() {
+
+		String regDate = util.getNowDateStr();
+
+		System.out.println("< 로그인 >");
+		System.out.println();
+
+		System.out.printf("아이디 : ");
+		String loginId = sc.nextLine();
+		System.out.println();
+		System.out.printf("비밀번호 : ");
+		String loginPw = sc.nextLine();
+
+		//logind찾는 함수 
+		Member member = getMemberByLoginId(loginId);
+
+		if (member == null) {
+
+			System.out.println("해당되는 회원이 없습니다");
+			return;
+
+		}
+		if (member.loginPw.equals(loginPw) == false) {
+
+			System.out.println("비밀번호가 틀렸습니다");
+			return;
+
+		}
+
+		//여기에 Member loginedMember를 만들면 안됨 그럼 기억하는게 함수끝나면 사라짐
+		loginedMember = member;
+		
+		System.out.printf("로그인 성공! %s님 환영합니다\n", loginedMember.name);
 
 	}
 
@@ -121,6 +165,22 @@ public class MemberController extends Controller {
 
 		}
 		return -1;
+
+	}
+
+	private Member getMemberByLoginId(String loginId) {
+
+		int index = getMemberIndexByLoginId(loginId); // loginId를 주는 index 생성
+
+		if (index == -1) { // -1은 없다는 뜻
+
+			return null;
+
+		}
+
+		return members.get(index);
+		//member로 return이 끝나기때문에 void를 뺴고 member로 해야함
+		
 
 	}
 
