@@ -13,13 +13,13 @@ public class ArticleController extends Controller {
 
 	private List<Article> articles; // 전체적으로 aritcles를 쓰기 때문에 하나 만들어준다
 	private Scanner sc; // 전체적으로 Scanner 쓰기 때문에 만들어준다
-	private String command; 
+	private String command;
 	private String actionMethodName;
 
 	public ArticleController(Scanner sc) { // articleController 생성자 생성
 
 		this.sc = sc;
-		articles = new ArrayList<>(); //app에 있던 articles를 지우고 controller에서 쓸 수있게 리모콘을 새로 만든다.
+		articles = new ArrayList<>(); // app에 있던 articles를 지우고 controller에서 쓸 수있게 리모콘을 새로 만든다.
 
 	}
 
@@ -28,9 +28,15 @@ public class ArticleController extends Controller {
 		this.command = command;
 		this.actionMethodName = actionMethodName;
 
-		switch (actionMethodName) { //commandBits[1]글자가 맞으면 실행이 된다
+		switch (actionMethodName) { // commandBits[1]글자가 맞으면 실행이 된다
 
-		case "wrtie":
+		case "write":
+			if(islogined() == false) { //로그인 하기전 사용 불가
+				
+				System.out.println("로그인후 이용해주세요");
+				return;
+				
+			}
 			doWrite();
 			break;
 		case "delete":
@@ -56,8 +62,6 @@ public class ArticleController extends Controller {
 		int id = articles.size() + 1; // maketestdata가 만들어지면서 게시물번호가 test다음 번호 이어야 되는데 1번으로 초기화가 되어
 		// lastArticleId를 지우고 게시믈 크기인 articles.size()로 게시글번호를 측정을 한다
 
-		System.out.println("< 게시글 >");
-
 		System.out.printf("제목 : ");
 		String title = sc.nextLine();
 		System.out.printf("내용 : ");
@@ -67,7 +71,7 @@ public class ArticleController extends Controller {
 		System.out.printf("%d번글이 생성되었습니다\n", id); // 바뀐 id를 적용 lastArticleId = 1, 한번 더 반복이 되면 2가 된다
 		System.out.println();
 
-		Article article = new Article(id, title, body, regDate); // article wirte를 담기 위한 객체 생성
+		Article article = new Article(id, loginedMember.id, title, body, regDate); // article wirte를 담기 위한 객체 생성
 		articles.add(article); // 위 article의 내용을 main 맨위에 있는 article객체 articles에 넣는다
 		return;
 
@@ -111,12 +115,12 @@ public class ArticleController extends Controller {
 			}
 		}
 
-		System.out.println("번호   | 제목  | 내용  | 조회수 ");
+		System.out.println("번호  | 작성자 | 제목  | 내용  | 조회수 ");
 
 		for (int i = forListArticles.size() - 1; i >= 0; i--) { // 번호를 최신순으로 하는 함수
 			Article article = forListArticles.get(i);// Article article를 불러오고 맨위 article객체 articles안에 내용물을 불러온다
 
-			System.out.printf("%4d  | %4s  |%4s  | %4d\n", article.id, article.title, article.body, article.hit);
+			System.out.printf("%4d  | %6d | %4s  |%4s  | %4d\n", article.id, article.memberId ,article.title, article.body, article.hit);
 			// 포멧앞에 숫자를 붙이면 그 만큼 공간을 만든다는 의미이다!
 		}
 
@@ -152,10 +156,10 @@ public class ArticleController extends Controller {
 		String[] commandBits = command.split(" "); // commandBits란 command에서 " " 공백을 기준으로 문자를 나눈 덩어리다, 한무장에서 여러
 		// 문장으로 되기 때문에 String앞에 []배열을 써준다
 		int id = Integer.parseInt(commandBits[2]); // commandBits[2]에 오는 문자 '1'을 정수 1로 바꿔준다
-		//commandBits[0] >> article
-		//commandBits[1] >> detail
-		//commandBits[2] >> "1" 문자이끼때문에 위에서 정수로 치환해준다
-		//article detail로 시작하면서 뒤에 숫자가 오면 실행을 해준다
+		// commandBits[0] >> article
+		// commandBits[1] >> detail
+		// commandBits[2] >> "1" 문자이끼때문에 위에서 정수로 치환해준다
+		// article detail로 시작하면서 뒤에 숫자가 오면 실행을 해준다
 		String regDate = util.getNowDateStr(); // 현재 날짜는 util에서 끌어서 쓴다
 		Article foundArticle = getArticleById(id); // Article안에 foundArticle 만들고 null로 초기화
 
@@ -170,7 +174,7 @@ public class ArticleController extends Controller {
 		System.out.println("번호 : " + foundArticle.id);
 		System.out.println("제목 : " + foundArticle.title);
 		System.out.println("내용 : " + foundArticle.body);
-		System.out.println("작성자 : 익명 ");
+		System.out.println("작성자 : " + foundArticle.memberId);
 		System.out.println("날짜 :  " + regDate);
 		System.out.println("조회수 : " + foundArticle.hit);
 		System.out.println();
@@ -259,12 +263,12 @@ public class ArticleController extends Controller {
 
 		return null;
 	}
-	
+
 	public void makeTestData() {
 		System.out.println("프로그램 시작시 실행됩니다.");
-		articles.add(new Article(1, "제목 1", "내용 1", util.getNowDateStr(), 11));
-		articles.add(new Article(2, "제목 2", "내용 2", util.getNowDateStr(), 22));
-		articles.add(new Article(3, "제목 3", "내용 3", util.getNowDateStr(), 33));
+		articles.add(new Article(1, 1,"제목 1", "내용 1", util.getNowDateStr(), 11));
+		articles.add(new Article(2, 2,"제목 2", "내용 2", util.getNowDateStr(), 22));
+		articles.add(new Article(3, 3,"제목 3", "내용 3", util.getNowDateStr(), 33));
 	}
 
 }

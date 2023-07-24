@@ -17,7 +17,7 @@ public class MemberController extends Controller {
 	private Scanner sc;
 	private String command;
 	private String actionMethodName;
-	private Member loginedMember;
+	
 
 	public MemberController(Scanner sc) {
 
@@ -146,11 +146,7 @@ public class MemberController extends Controller {
 
 	}
 
-	private boolean islogined() {
-		
-		return loginedMember != null; //!= >> null에 반대는 내용물이 있다. 즉 로그인이 되어있다
-		
-	}
+	
 	
 	private void dologout() {
 		
